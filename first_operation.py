@@ -14,7 +14,7 @@ class first_algorithm:
         X = alfa[0]
         beta = alfa[1:]
         if self.__G.is_terminal(X):
-            return set(X)
+            return set([X])
         ans = set()
         if not self.__visited[X]:
             self.__visited[X] = True
