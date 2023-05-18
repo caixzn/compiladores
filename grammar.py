@@ -67,4 +67,4 @@ class Grammar:
         return O[0]
 
     def tail(self, p: int, i:int) -> list:
-        return self.__productions[p]['rhs'][i:]
+        return self.__productions[p]['rhs'][i+1:]

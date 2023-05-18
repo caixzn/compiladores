@@ -11,11 +11,11 @@ class follow_algorithm:
         self.__visited = {}
         self.__symbol_derives_empty = {}
 
-    def run(self, X: str) -> set:
+    def run(self, A: str) -> set:
         self.__empty_string_alg.run()
         self.__symbol_derives_empty = self.__empty_string_alg.symbol_derives_empty()
-        for A in self.__G.nonterminals():
-            self.__visited[A] = False
+        for X in self.__G.nonterminals():
+            self.__visited[X] = False
         return self.internal_follow(A)
 
     def internal_follow(self, A: str) -> set:
