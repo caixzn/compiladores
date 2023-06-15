@@ -20,9 +20,9 @@ class first_algorithm:
             self.__visited[X] = True
             for p in self.__G.productions_for(X):
                 rhs = self.__G.rhs(p)
-                ans = ans.union(self.internal_first(rhs))
+                ans.update(self.internal_first(rhs))
         if self.__symbol_derives_empty[X]:
-            ans = ans.union(self.internal_first(beta))
+            ans.update(self.internal_first(beta))
         return ans
 
     def run(self, alfa: list) -> set:

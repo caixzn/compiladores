@@ -24,10 +24,10 @@ class follow_algorithm:
             self.__visited[A] = True
             for (p, i) in self.__G.occurrences(A):
                 tail = self.__G.tail(p, i)
-                ans = ans.union(self.__first_alg.run(tail))
+                ans.update(self.__first_alg.run(tail))
                 if self.all_derive_empty(tail):
                     lhs = self.__G.lhs(self.__G.production((p, i)))
-                    ans = ans.union(self.internal_follow(lhs))
+                    ans.update(self.internal_follow(lhs))
         return ans
 
     def all_derive_empty(self, gamma: list) -> bool:

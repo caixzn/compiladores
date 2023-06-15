@@ -7,7 +7,7 @@ def is_ll1(G: Grammar, pred_alg: predict_algorithm) -> bool:
         pred_set = set()
         for p in G.productions_for(A):
             pred = pred_alg.predict(p)
-            if len(pred_set & pred) != 0:
+            if not pred_set.isdisjoint(pred):
                 return False
-            pred_set.union(pred)
+            pred_set.update(pred)
     return True
