@@ -2,76 +2,123 @@ from grammar import Grammar
 from derives_empty_string import derives_empty_string_algorithm
 from first_operation import first_algorithm
 from follow_operation import follow_algorithm
+from ll1_check import is_ll1
+from predict import predict_algorithm
+
 
 def print_grammar(G: Grammar) -> None:
-    print('Terminais:', ' '.join([x for x in G.terminals()]))
-    print('Não-terminais:', ' '.join([X for X in G.nonterminals()]))
-    # print(G.productions())
-    print('Produções:', ' '.join(
-        ['id: ' + str(p) + ' ' + str(G.lhs(p)) + '->' + str(G.rhs(p)) for p in G.productions()]))
+    print(f"Terminais:\n{'\n'.join([x for x in G.terminals()])}")
+    print(f"Não-terminais:\n{'\n'.join([X for X in G.nonterminals()])}")
+    print(f"Produções:\n{'\n'.join(
+        ['id: ' + str(p) + ' ' + str(G.lhs(p)) + '->' + str(G.rhs(p)) for p in G.productions()])}")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     G = Grammar()
-    G.grammar('S')
-    G.add_nonterminal('A')
-    G.add_nonterminal('B')
-    G.add_terminal('a')
-    G.add_terminal('b')
-    G.add_terminal('c')
-    G.add_production('S', ['A', 'B', 'c'])
-    G.add_production('A', ['a'])
-    G.add_production('A', ['c'])
-    G.add_production('A', [])
-    G.add_production('B', 'b')
-    G.add_production('B', 'c')
-    G.add_production('B', [])
- 
-    print_grammar(G)
-    print('Imprimindo terminais')
-    for x in G.terminals():
-        print(x)
-    print('Imprimindo não-terminais')
-    for x in G.nonterminals():
-        print(x)
-    print('Imprimindo produções')
-    for x in G.productions():
-        print(x)
-    print('Produçoes para A:')
-    for productions in G.productions_for('A'):
-        print(productions)
+    G.grammar("programa")
+    G.add_nonterminal("declaracoes")
+    G.add_nonterminal("comandos")
+    G.add_production("programa", ["declaracoes", "comandos"])
+    G.add_terminal("operadorRelacional")
+    G.add_terminal("identificador")
+    G.add_nonterminal("numero")
+    G.add_terminal("numeroInt")
+    G.add_terminal("numeroFloat")
+    G.add_production("numero", ["numeroInt"])
+    G.add_production("numero", ["numeroFloat"])
+    G.add_terminal("tipoDeclaracao")
+    G.add_terminal("tipo")
+    G.add_nonterminal("declaracao")
+    G.add_production("declaracao", ["tipoDeclaracao", "identificador", "tipo"])
+    G.add_production("declaracoes", ["declaracao", "declaracoes"])
+    G.add_production("declaracoes", [])
+    G.add_nonterminal("comandos")
+    G.add_nonterminal("comando")
+    G.add_production("comandos", ["comando", "comandos"])
+    G.add_production("comandos", [])
+    G.add_nonterminal("atribuicao")
+    G.add_production("comando", ["atribuicao"])
+    G.add_production("comando", ["while"])
+    G.add_production("comando", ["if"])
+    G.add_terminal("=")
+    G.add_production("atribuicao", ["identificador", "=", "fator"])
 
-    print(G.rhs(6))
-    print(G.lhs(6))
-    print('Ocorrências de c')
-    for occ in G.occurrences('c'):
-        print(occ)
-    print('Produção de cada ocorrência de c')
-    for occ in G.occurrences('c'):
-        print(G.production(occ))
-    print('Tail de A na regra 6')
-    print(G.tail(6,0))
+    G.add_nonterminal("fator")
+    G.add_nonterminal("termo")
+    G.add_nonterminal("fatorPrime")
+    G.add_nonterminal("termoPrime")
+    G.add_nonterminal("expressao")
+    G.add_nonterminal("expressaoPrime")
+    G.add_terminal("*")
+    G.add_terminal("/")
+    G.add_terminal("+")
+    G.add_terminal("-")
+    G.add_terminal("(")
+    G.add_terminal(")")
+
+    G.add_production("fator", ["(", "expressao", ")"])
+    G.add_production("fator", ["numero"])
+    # G.add_production("fator", ["identificador"])
+
+    G.add_production("termo", ["fator", "termoPrime"])
+    G.add_production("termoPrime", ["*", "fator", "termoPrime"])
+    G.add_production("termoPrime", ["/", "fator", "termoPrime"])
+    G.add_production("termoPrime", [])
+
+    G.add_production("expressao", ["termo", "expressaoPrime"])
+    G.add_production("expressaoPrime", ["+", "termo", "expressaoPrime"])
+    G.add_production("expressaoPrime", ["-", "termo", "expressaoPrime"])
+    G.add_production("expressaoPrime", [])
+    
+
+
+    G.add_nonterminal("while")
+    G.add_nonterminal("if")
+    G.add_nonterminal("condicaoSimples")
+    G.add_production("condicaoSimples", ["fator"])
+    # G.add_production("condicaoSimples", ["condicaoSimples", "operadorRelacional", "condicaoSimples"])
+    # G.add_terminal("and")
+    # G.add_terminal("or")
+    # G.add_terminal("not")
+    # G.add_nonterminal("condicao")
+    # G.add_production("condicao", ["condicaoSimples"])
+    # G.add_production("condicao", ["not", "condicao"])
+    # G.add_production("condicao", ["condicaoSimples", "and", "condicao"])
+    # G.add_production("condicao", ["condicaoSimples", "or", "condicao"])
+    
+    # G.add_nonterminal("else")
+    # G.add_production("else", ["else", "comandos"])
+    # G.add_production("else", [])
+    # G.add_nonterminal("if")
+    # G.add_terminal("endif")
+    # G.add_production("if", ["if", "condicao", "comandos", "else", "endif"])
+    
+
+   
+
+    # print_grammar(G)
+    # print("Imprimindo terminais")
+    # for x in G.terminals():
+    #     print(x)
+    # print("Imprimindo não-terminais")
+    # for x in G.nonterminals():
+    #     print(x)
+    # print("Imprimindo produções")
+    # for x in G.productions():
+    #     print(x)
+    # print("Produçoes para A:")
+    # for productions in G.productions_for("A"):
+    #     print(productions)
 
     empty_alg = derives_empty_string_algorithm(G)
     empty_alg.run()
-    print(empty_alg.rule_derives_empty())
-    print(empty_alg.symbol_derives_empty()) 
-
-    G.add_production('S',['A','B'])
 
     empty_alg = derives_empty_string_algorithm(G)
     empty_alg.run()
-    print(empty_alg.rule_derives_empty())
-    print(empty_alg.symbol_derives_empty()) 
 
-    first_alg = first_algorithm(G)
-    my_set = first_alg.run(['S'])
-    print('First(S) = ',my_set)
-    my_set = first_alg.run(['A'])
-    print('First(A) = ',my_set)
-    my_set = first_alg.run(['B'])
-    print('First(B) = ',my_set)
-
-    follow_alg = follow_algorithm(G)
-    my_set = follow_alg.run(['A'])
-    print('Follow(A) = ',my_set)
+    pred_alg = predict_algorithm(G)
+    ll1 = is_ll1(G, pred_alg)
+    if ll1:
+        print("É LL(1)")
+    else:
+        print("Não é LL(1)")
